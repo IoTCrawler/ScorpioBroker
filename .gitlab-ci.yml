@@ -39,7 +39,7 @@
 # `.buildpacks` that contains the URLs, one on each line, in order.
 # Note: Auto CI does not work with multiple buildpacks yet
 
-image: maven:3-jdk-8
+image: maven:3-jdk-11
 
 services:
   - postgres:latest
