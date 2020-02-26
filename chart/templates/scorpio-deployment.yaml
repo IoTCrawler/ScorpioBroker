@@ -6,7 +6,11 @@ metadata:
     kompose.version: 1.20.0 ()
   creationTimestamp: null
   labels:
-    io.kompose.service: scorpio
+    app: {{ template "appname" . }}
+    service: broker
+    track: "{{ .Values.application.track }}"
+    tier: "{{ .Values.application.tier }}"
+    release: {{ .Release.Name }}
   name: scorpio-deployment
 spec:
   replicas: 1
@@ -16,14 +20,26 @@ spec:
       annotations:
         kompose.cmd: kompose convert -c -f docker-compose-aaio-dev.yml
         kompose.version: 1.20.0 ()
+        checksum/application-secrets: "{{ .Values.application.secretChecksum }}"
+        {{ if .Values.gitlab.app }}app.gitlab.com/app: {{ .Values.gitlab.app | quote }}{{ end }}
+        {{ if .Values.gitlab.env }}app.gitlab.com/env: {{ .Values.gitlab.env | quote }}{{ end }}
+{{- if .Values.podAnnotations }}
+{{ toYaml .Values.podAnnotations | indent 8 }}
+{{- end }}
       creationTimestamp: null
       labels:
-        io.kompose.service: scorpio
+        app: {{ template "appname" . }}
+        service: broker
+        track: "{{ .Values.application.track }}"
+        tier: "{{ .Values.application.tier }}"
+        release: {{ .Release.Name }}
     spec:
+      imagePullSecrets:
+{{ toYaml .Values.image.secrets | indent 10 }}
       containers:
-      - name: scorpio
-        image: scorpiobroker-aaio
-        imagePullPolicy: IfNotPresent
+      - name: {{ .Chart.Name }}-broker
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 9090
         resources: {}
