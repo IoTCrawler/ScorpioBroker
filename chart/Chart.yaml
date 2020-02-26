@@ -1,0 +1,7 @@
+name: scorpiobroker
+description: A generated Helm Chart for docker-compose-aaio-dev from Skippbox Kompose
+version: 0.0.1
+keywords:
+  - docker-compose-aaio-dev
+sources:
+home:
