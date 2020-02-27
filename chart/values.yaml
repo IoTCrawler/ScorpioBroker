@@ -56,15 +56,15 @@ ingress:
 prometheus:
   metrics: false
 livenessProbe:
-  path: "/"
-  initialDelaySeconds: 15
-  timeoutSeconds: 15
+  path: "/actuator/health"
+  initialDelaySeconds: 30
+  timeoutSeconds: 10
   scheme: "HTTP"
   probeType: "httpGet"
 readinessProbe:
-  path: "/"
-  initialDelaySeconds: 5
-  timeoutSeconds: 3
+  path: "/actuator/health"
+  initialDelaySeconds: 30
+  timeoutSeconds: 10
   scheme: "HTTP"
   probeType: "httpGet"
 postgresql:

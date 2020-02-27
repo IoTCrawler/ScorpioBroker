@@ -7,14 +7,25 @@ metadata:
   creationTimestamp: null
   labels:
     app: {{ template "appname" . }}
-    service: broker
     track: "{{ .Values.application.track }}"
     tier: "{{ .Values.application.tier }}"
     release: {{ .Release.Name }}
-  name: scorpio-deployment
+    service: broker
+  name: {{ template "trackableappname" . }}
 spec:
-  replicas: 1
-  strategy: {}
+{{- if or .Values.enableSelector (eq (default "extensions/v1beta1" .Values.deploymentApiVersion) "apps/v1") }}
+  selector:
+    matchLabels:
+      app: {{ template "appname" . }}
+      track: "{{ .Values.application.track }}"
+      tier: "{{ .Values.application.tier }}"
+      release: {{ .Release.Name }}
+{{- end }}
+  replicas: {{ .Values.replicaCount }}
+{{- if .Values.strategyType }}
+  strategy:
+    type: {{ .Values.strategyType | quote }}
+{{- end }}
   template:
     metadata:
       annotations:
@@ -29,10 +40,10 @@ spec:
       creationTimestamp: null
       labels:
         app: {{ template "appname" . }}
-        service: broker
         track: "{{ .Values.application.track }}"
         tier: "{{ .Values.application.tier }}"
         release: {{ .Release.Name }}
+        service: broker
     spec:
       imagePullSecrets:
 {{ toYaml .Values.image.secrets | indent 10 }}
@@ -41,7 +52,40 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
-        - containerPort: 9090
+        - name: "{{ .Values.service.name }}"
+          containerPort: {{ .Values.service.internalPort }}
+        livenessProbe:
+{{- if eq .Values.livenessProbe.probeType "httpGet" }}
+          httpGet:
+            path: {{ .Values.livenessProbe.path }}
+            scheme: {{ .Values.livenessProbe.scheme }}
+            port: {{ .Values.service.internalPort }}
+{{- else if eq .Values.livenessProbe.probeType "tcpSocket" }}
+          tcpSocket:
+            port: {{ .Values.service.internalPort }}
+{{- else if eq .Values.livenessProbe.probeType "exec" }}
+          exec:
+            command:
+{{ toYaml .Values.livenessProbe.command | indent 14 }}
+{{- end }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+        readinessProbe:
+{{- if eq .Values.readinessProbe.probeType "httpGet" }}
+          httpGet:
+            path: {{ .Values.readinessProbe.path }}
+            scheme: {{ .Values.readinessProbe.scheme }}
+            port: {{ .Values.service.internalPort }}
+{{- else if eq .Values.readinessProbe.probeType "tcpSocket" }}
+          tcpSocket:
+            port: {{ .Values.service.internalPort }}
+{{- else if eq .Values.readinessProbe.probeType "exec" }}
+          exec:
+            command:
+{{ toYaml .Values.readinessProbe.command | indent 14 }}
+{{- end }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         resources: {}
       restartPolicy: Always
       enableServiceLinks: false

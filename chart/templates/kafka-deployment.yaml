@@ -24,10 +24,10 @@ spec:
       creationTimestamp: null
       labels:
         app: {{ template "appname" . }}
-        service: kafka
         track: "{{ .Values.application.track }}"
         tier: "{{ .Values.application.tier }}"
         release: {{ .Release.Name }}
+        service: kafka
     spec:
       containers:
       - name: kafka

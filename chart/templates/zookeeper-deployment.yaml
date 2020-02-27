@@ -7,10 +7,10 @@ metadata:
   creationTimestamp: null
   labels:
     app: {{ template "appname" . }}
-    service: zookeeper
     track: "{{ .Values.application.track }}"
     tier: "{{ .Values.application.tier }}"
     release: {{ .Release.Name }}
+    service: zookeeper
   name: zookeeper-deployment
 spec:
   replicas: 1
@@ -23,10 +23,10 @@ spec:
       creationTimestamp: null
       labels:
         app: {{ template "appname" . }}
-        service: zookeeper
         track: "{{ .Values.application.track }}"
         tier: "{{ .Values.application.tier }}"
         release: {{ .Release.Name }}
+        service: zookeeper
     spec:
       containers:
       - name: zookeeper

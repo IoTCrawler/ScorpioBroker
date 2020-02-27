@@ -7,10 +7,12 @@ metadata:
   creationTimestamp: null
   labels:
     app: {{ template "appname" . }}
-    service: postgres
     track: "{{ .Values.application.track }}"
     tier: "{{ .Values.application.tier }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    service: postgres
   name: postgres-deployment
 spec:
   replicas: 1
@@ -23,10 +25,10 @@ spec:
       creationTimestamp: null
       labels:
         app: {{ template "appname" . }}
-        service: postgres
         track: "{{ .Values.application.track }}"
         tier: "{{ .Values.application.tier }}"
         release: {{ .Release.Name }}
+        service: postgres
     spec:
       containers:
       - name: postgres
