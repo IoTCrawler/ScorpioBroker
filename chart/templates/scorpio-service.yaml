@@ -23,5 +23,7 @@ spec:
     track: "{{ .Values.application.track }}"
     tier: "{{ .Values.application.tier }}"
     release: {{ .Release.Name }}
+  type: NodePort
+    nodePort: 9090
 status:
   loadBalancer: {}
