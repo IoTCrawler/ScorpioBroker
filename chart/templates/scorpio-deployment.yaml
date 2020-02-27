@@ -45,8 +45,6 @@ spec:
         release: {{ .Release.Name }}
         service: broker
     spec:
-      imagePullSecrets:
-{{ toYaml .Values.image.secrets | indent 10 }}
       containers:
       - name: {{ .Chart.Name }}-broker
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -54,38 +52,6 @@ spec:
         ports:
         - name: "{{ .Values.service.name }}"
           containerPort: {{ .Values.service.internalPort }}
-        livenessProbe:
-{{- if eq .Values.livenessProbe.probeType "httpGet" }}
-          httpGet:
-            path: {{ .Values.livenessProbe.path }}
-            scheme: {{ .Values.livenessProbe.scheme }}
-            port: {{ .Values.service.internalPort }}
-{{- else if eq .Values.livenessProbe.probeType "tcpSocket" }}
-          tcpSocket:
-            port: {{ .Values.service.internalPort }}
-{{- else if eq .Values.livenessProbe.probeType "exec" }}
-          exec:
-            command:
-{{ toYaml .Values.livenessProbe.command | indent 14 }}
-{{- end }}
-          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-        readinessProbe:
-{{- if eq .Values.readinessProbe.probeType "httpGet" }}
-          httpGet:
-            path: {{ .Values.readinessProbe.path }}
-            scheme: {{ .Values.readinessProbe.scheme }}
-            port: {{ .Values.service.internalPort }}
-{{- else if eq .Values.readinessProbe.probeType "tcpSocket" }}
-          tcpSocket:
-            port: {{ .Values.service.internalPort }}
-{{- else if eq .Values.readinessProbe.probeType "exec" }}
-          exec:
-            command:
-{{ toYaml .Values.readinessProbe.command | indent 14 }}
-{{- end }}
-          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         resources: {}
       restartPolicy: Always
       enableServiceLinks: false
