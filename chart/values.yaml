@@ -32,7 +32,7 @@ gitlab:
 service:
   enabled: true
   annotations: {}
-  name: web
+  name: broker
   type: ClusterIP
   url: http://my.host.com/
   additionalHosts:
