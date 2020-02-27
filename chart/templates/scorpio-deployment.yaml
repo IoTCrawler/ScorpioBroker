@@ -46,7 +46,7 @@ spec:
         service: broker
     spec:
       containers:
-      - name: {{ .Chart.Name }}-broker
+      - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
