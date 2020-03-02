@@ -1,10 +1,9 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
     kompose.cmd: kompose convert -c -f docker-compose-aaio-dev.yml
     kompose.version: 1.20.0 ()
-  creationTimestamp: null
   labels:
     app: {{ template "appname" . }}
     track: "{{ .Values.application.track }}"
@@ -13,6 +12,13 @@ metadata:
     service: zookeeper
   name: zookeeper-deployment
 spec:
+  selector:
+    matchLabels:
+      app: {{ template "appname" . }}
+      track: "{{ .Values.application.track }}"
+      tier: "{{ .Values.application.tier }}"
+      release: {{ .Release.Name }}
+      service: zookeeper
   replicas: 1
   strategy: {}
   template:
