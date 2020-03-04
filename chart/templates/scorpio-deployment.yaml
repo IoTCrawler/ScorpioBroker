@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: {{ template "trackableappname" . }}
   annotations:
-    kompose.cmd: kompose convert -c -f docker-compose-aaio-dev.yml
-    kompose.version: 1.20.0 ()
+    {{ if .Values.gitlab.app }}app.gitlab.com/app: {{ .Values.gitlab.app | quote }}{{ end }}
+    {{ if .Values.gitlab.env }}app.gitlab.com/env: {{ .Values.gitlab.env | quote }}{{ end }}
   labels:
     app: {{ template "appname" . }}
     track: "{{ .Values.application.track }}"
     tier: "{{ .Values.application.tier }}"
     release: {{ .Release.Name }}
     service: broker
-  name: {{ template "trackableappname" . }}
 spec:
 {{- if or .Values.enableSelector (eq (default "extensions/v1beta1" .Values.deploymentApiVersion) "apps/v1") }}
   selector:
@@ -29,8 +29,6 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert -c -f docker-compose-aaio-dev.yml
-        kompose.version: 1.20.0 ()
         checksum/application-secrets: "{{ .Values.application.secretChecksum }}"
         {{ if .Values.gitlab.app }}app.gitlab.com/app: {{ .Values.gitlab.app | quote }}{{ end }}
         {{ if .Values.gitlab.env }}app.gitlab.com/env: {{ .Values.gitlab.env | quote }}{{ end }}
@@ -50,10 +48,16 @@ spec:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.application.secretName }}
+        envFrom:
+        - secretRef:
+            name: {{ .Values.application.secretName }}
+        {{- end }}
         ports:
         - name: "{{ .Values.service.name }}"
           containerPort: {{ .Values.service.internalPort }}
-        resources: {}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
       restartPolicy: Always
       enableServiceLinks: false
 status: {}
