@@ -42,11 +42,11 @@ spec:
         release: {{ .Release.Name }}
         service: broker
     spec:
-      imagePullSecrets:
-{{ toYaml .Values.image.secrets | indent 10 }}
+#      imagePullSecrets:
+#{{ toYaml .Values.image.secrets | indent 10 }}
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: scorpiobroker/scorpio:scorpio-aaio_0.9.11
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- if .Values.application.secretName }}
         envFrom:
