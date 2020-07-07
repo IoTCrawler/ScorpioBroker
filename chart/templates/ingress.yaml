@@ -8,7 +8,27 @@ metadata:
     track: "{{ .Values.application.track }}"
     tier: "{{ .Values.application.tier }}"
     release: {{ .Release.Name }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
 spec:
-  backend:
-    serviceName: scorpio
-    servicePort: 9090
+  tls:
+  - hosts:
+    {{ if eq .Values.gitlab.env "production" }}
+    - mdr.iotcrawler.eu
+    {{ else }}
+    - staging.mdr.iotcrawler.eu
+    {{ end }}
+    secretName: search-enabler-{{ .Values.gitlab.env }}-tls22
+  rules:
+  {{ if eq .Values.gitlab.env "production" }}
+  - host: mdr.iotcrawler.eu
+  {{ else }}
+  - host: staging.mdr.iotcrawler.eu
+  {{ end }}
+    http:
+      paths:
+      - path: "/"
+        backend:
+          serviceName: scorpio
+          servicePort: 9090
