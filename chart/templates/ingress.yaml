@@ -19,7 +19,7 @@ spec:
     {{ else }}
     - staging.mdr.iotcrawler.eu
     {{ end }}
-    secretName: search-enabler-{{ .Values.gitlab.env }}-tls22
+    secretName: mdrr-{{ .Values.gitlab.env }}-tls
   rules:
   {{ if eq .Values.gitlab.env "production" }}
   - host: mdr.iotcrawler.eu
