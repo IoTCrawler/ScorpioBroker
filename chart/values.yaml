@@ -7,7 +7,8 @@ enableSelector:
 deploymentApiVersion: apps/v1
 image:
   repository: scorpiobroker/scorpio
-  tag: scorpio-aaio_0.9.11
+  tag: scorpio-aaio_1.0.3
+  # tag: scorpio-aaio_0.9.11
   # repository: gitlab.iotcrawler.net:4567/metadata-repository/scorpiobroker/master
   # tag: latest
   pullPolicy: IfNotPresent
