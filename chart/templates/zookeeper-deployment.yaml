@@ -39,5 +39,12 @@ spec:
         image: zookeeper
         ports:
         - containerPort: 2181
+        resources:
+          limits:
+            cpu: 200m
+            memory: 300Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
       restartPolicy: Always
       enableServiceLinks: false

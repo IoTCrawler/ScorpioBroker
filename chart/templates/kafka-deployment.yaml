@@ -47,5 +47,12 @@ spec:
           value: "9092"
         - name: KAFKA_ZOOKEEPER_CONNECT
           value: zookeeper:2181
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 700Mi
       restartPolicy: Always
       enableServiceLinks: false

@@ -46,5 +46,12 @@ spec:
           value: ngb
         ports:
         - containerPort: 5432
+        resources:
+          limits:
+            cpu: 200m
+            memory: 400Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
       restartPolicy: Always
       enableServiceLinks: false
