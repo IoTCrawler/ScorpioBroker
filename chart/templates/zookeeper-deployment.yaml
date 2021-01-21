@@ -40,11 +40,6 @@ spec:
         ports:
         - containerPort: 2181
         resources:
-          limits:
-            cpu: 200m
-            memory: 300Mi
-          requests:
-            cpu: 100m
-            memory: 200Mi
+{{ toYaml .Values.zookeeper.resources | indent 12 }}
       restartPolicy: Always
       enableServiceLinks: false

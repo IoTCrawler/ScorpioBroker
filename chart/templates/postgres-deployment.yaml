@@ -47,11 +47,6 @@ spec:
         ports:
         - containerPort: 5432
         resources:
-          limits:
-            cpu: 200m
-            memory: 400Mi
-          requests:
-            cpu: 100m
-            memory: 200Mi
+{{ toYaml .Values.postgres.resources | indent 12 }}
       restartPolicy: Always
       enableServiceLinks: false

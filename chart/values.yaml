@@ -14,6 +14,7 @@ image:
   pullPolicy: IfNotPresent
   secrets:
     - name: gitlab-registry
+
 podAnnotations: {}
 application:
   track: latest
@@ -42,6 +43,59 @@ service:
   commonName:
   externalPort: 9090
   internalPort: 9090
+
+zookeeper:
+  name: zookeeper
+  image:
+    repository: zookeeper
+    tag: 3.6.1
+  service:
+    name: zookeeper
+    enabled: true
+    externalPort: 2181
+    internalPort: 2181
+  resources:
+    limits:
+      cpu: 200m
+      memory: 300Mi
+    requests:
+      cpu: 100m
+      memory: 200Mi
+kafka:
+  name: kafka
+  image:
+    repository: wurstmeister/kafka
+    tag: 2.12-2.5.0
+  service:
+    name: kafka
+    enabled: true
+    externalPort: 9092
+    internalPort: 9092
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1.5Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+postgres:
+  name: postgres
+  image:
+    repository: mdillon/postgis
+    tag: 11
+  service:
+    name: postgres
+    enabled: true
+    externalPort: 5432
+    internalPort: 5432
+  resources:
+    limits:
+      cpu: 600m
+      memory: 600Mi
+    requests:
+      cpu: 300m
+      memory: 400Mi
+
 ingress:
   tls:
     enabled: true
