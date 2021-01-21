@@ -37,7 +37,8 @@ spec:
     spec:
       containers:
       - name: kafka
-        image: wurstmeister/kafka
+        image: "{{ .Values.kafka.image.repository }}:{{ .Values.kafka.image.tag }}"
+        imagePullPolicy: {{ .Values.kafka.image.pullPolicy }}
         ports:
         - containerPort: 9092
         env:

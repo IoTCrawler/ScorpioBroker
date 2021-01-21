@@ -36,7 +36,8 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: zookeeper
+        image: "{{ .Values.zookeeper.image.repository }}:{{ .Values.zookeeper.image.tag }}"
+        imagePullPolicy: {{ .Values.zookeeper.image.pullPolicy }}
         ports:
         - containerPort: 2181
         resources:

@@ -36,7 +36,8 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: mdillon/postgis
+        image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+        imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
         env:
         - name: POSTGRES_DB
           value: ngb
